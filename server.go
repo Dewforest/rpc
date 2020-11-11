@@ -25,8 +25,8 @@ type Option struct {
 }
 
 var DefaultOption = &Option{
-	MagicNumber: MagicNumber,
-	CodecType:   codec.GobType,
+	MagicNumber:    MagicNumber,
+	CodecType:      codec.GobType,
 	ConnectTimeout: time.Second * 10,
 }
 
@@ -186,7 +186,7 @@ type Server struct {
 // 将rpc服务注册到servMap中
 func (server *Server) Register(rcvr interface{}) error {
 	s := newService(rcvr)
-	if _, dup := server.serviceMap.LoadOrStore(s.name, s);dup {
+	if _, dup := server.serviceMap.LoadOrStore(s.name, s); dup {
 		return errors.New("rpc: service already defined: " + s.name)
 	}
 	return nil
@@ -217,8 +217,8 @@ func (server *Server) findService(serviceMethod string) (svc *service, mtype *me
 }
 
 const (
-	connected		 = "200 Connected to Gee RPC"
-	defaultRPCPath   = "/_geeperc_"
+	connected        = "200 Connected to Gee RPC"
+	defaultRPCPath   = "/_geerpc_"
 	defaultDebugPath = "/debug/geerpc"
 )
 
@@ -235,7 +235,7 @@ func (server *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	_, _ = io.WriteString(conn, "HTTP/1.0 " + connected + "\n\n")
+	_, _ = io.WriteString(conn, "HTTP/1.0 "+connected+"\n\n")
 	server.ServeConn(conn)
 }
 

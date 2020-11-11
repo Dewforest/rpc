@@ -32,7 +32,7 @@ type MultiServersDiscovery struct {
 func NewMultiServerDiscovery(servers []string) *MultiServersDiscovery {
 	d := &MultiServersDiscovery{
 		servers: servers,
-		r: rand.New(rand.NewSource(time.Now().UnixNano())),
+		r:       rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 	d.index = d.r.Intn(math.MaxInt32 - 1)
 	return d
@@ -63,7 +63,7 @@ func (d *MultiServersDiscovery) Get(mode SelectMode) (string, error) {
 		return d.servers[d.r.Intn(n)], nil
 	case RoundRobinSelect:
 		s := d.servers[d.index%n]
-		d.index = (d.index+1) % n
+		d.index = (d.index + 1) % n
 		return s, nil
 	default:
 		return "", errors.New("rpc discovery: not supported select mode")
@@ -71,7 +71,7 @@ func (d *MultiServersDiscovery) Get(mode SelectMode) (string, error) {
 }
 
 func (d *MultiServersDiscovery) GetAll() ([]string, error) {
-	d.mu.Lock()
+	d.mu.RLock()
 	defer d.mu.RUnlock()
 	servers := make([]string, len(d.servers), len(d.servers))
 	copy(servers, d.servers)
